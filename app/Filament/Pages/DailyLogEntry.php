@@ -5,11 +5,10 @@ namespace App\Filament\Pages;
 use App\Enums\PaymentMethod;
 use App\Enums\Shift;
 use App\Enums\UserRole;
-use App\Models\DailyLog;
-use App\Models\ServiceType;
+use App\Exceptions\NoActiveServiceTypeException;
 use App\Models\Site;
 use App\Models\Staff;
-use App\Models\WashEntry;
+use App\Services\DailyLogService;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -61,7 +60,8 @@ class DailyLogEntry extends Page implements HasForms
                     ->options(fn () => $this->getAvailableSites())
                     ->required()
                     ->live()
-                    ->disabled(fn () => auth()->user()?->isSiteManager()),
+                    ->disabled(fn () => auth()->user()?->isSiteManager())
+                    ->dehydrated(),
                 Forms\Components\DatePicker::make('date')
                     ->label(__('Date'))
                     ->required()
@@ -93,12 +93,9 @@ class DailyLogEntry extends Page implements HasForms
     {
         $data = $this->form->getState();
 
-        $serviceType = ServiceType::query()
-            ->where('site_id', $data['site_id'])
-            ->where('is_active', true)
-            ->first();
-
-        if (! $serviceType) {
+        try {
+            app(DailyLogService::class)->recordEntry($data, auth()->user());
+        } catch (NoActiveServiceTypeException) {
             Notification::make()
                 ->title(__('No wash price configured for this site.'))
                 ->danger()
@@ -106,26 +103,6 @@ class DailyLogEntry extends Page implements HasForms
 
             return;
         }
-
-        $dailyLog = DailyLog::firstOrCreate(
-            [
-                'site_id' => $data['site_id'],
-                'date' => $data['date'],
-                'shift' => $data['shift'],
-            ],
-            [
-                'submitted_by_id' => auth()->id(),
-                'is_closed' => false,
-            ]
-        );
-
-        WashEntry::create([
-            'daily_log_id' => $dailyLog->id,
-            'staff_id' => $data['staff_id'],
-            'service_type_id' => $serviceType->id,
-            'vehicle_count' => $data['vehicle_count'],
-            'payment_method' => $data['payment_method'],
-        ]);
 
         Notification::make()
             ->title(__('Wash entry saved'))

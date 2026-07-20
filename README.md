@@ -50,6 +50,14 @@ Open **http://localhost:8000/admin**
 | [CLIENT_DISCOVERY.md](docs/CLIENT_DISCOVERY.md) | Client answers |
 | [DUMMY_DATA.md](docs/DUMMY_DATA.md) | Seed data reference |
 
+## Running tests
+
+```bash
+php artisan test
+```
+
+See [docs/TDD.md](docs/TDD.md) for the test-driven development workflow.
+
 ## Tech Stack
 
 - Laravel 11
