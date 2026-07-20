@@ -224,17 +224,22 @@ Based on answers above, Phase 1 should include:
 - [ ] Shift filter on reports (morning / evening / both)
 
 ### Defer to Phase 2
-- Expense tracking and P&L
-- Housing cost allocation
-- Food cost auto-calculation in reports
-- Monthly profit per site report
-- Contract renewal alerts
-- Arabic language
+- [x] Expense tracking and P&L
+- [x] Housing cost allocation
+- [x] Food cost auto-calculation in reports
+- [x] Monthly profit per site report
+- [x] Contract renewal alerts
+- [ ] Arabic language
 
 ### Defer to Phase 3
 - [x] Partner portal and monthly payout reports
 - [x] Mixed payroll calculation
 - [ ] Hindi + Urdu languages
+
+### Phase 4 (done)
+- [x] Break-even analysis
+- [x] Missing daily log alerts
+- [x] Excel export (logs, expenses, P&L)
 
 ---
 

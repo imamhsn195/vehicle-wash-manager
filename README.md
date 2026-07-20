@@ -2,7 +2,7 @@
 
 Multi-site vehicle wash business management system built with **Laravel 11 + Filament v3**.
 
-## Features (Phase 1–3)
+## Features (Phase 1–4)
 
 - Mall site & contract management
 - Staff registry with pay types and site assignments
@@ -15,6 +15,9 @@ Multi-site vehicle wash business management system built with **Laravel 11 + Fil
 - **Monthly Site P&L** report (revenue, expenses, profit, margin, cost/wash)
 - **Partners** with per-site share % and monthly payout settlements
 - **Payroll** for daily / monthly / per-car / hybrid pay types
+- **Break-even analysis** — cars/day needed per site
+- **Alerts** — contract renewals + missing daily logs
+- **Excel exports** — daily logs, expenses, site P&L
 - Dummy seed data for demo
 - English + Bangla UI strings
 - **TDD** — see [docs/TDD.md](docs/TDD.md)
@@ -75,5 +78,5 @@ See [docs/TDD.md](docs/TDD.md) for the test-driven development workflow.
 
 ## Next Phases
 
-- **Phase 4:** Break-even alerts, contract renewal reminders, Excel/PDF export
-- **Phase 5:** Staff self-view, WhatsApp summaries, more languages (Arabic/Hindi/Urdu)
+- **Phase 5:** Staff self-view, WhatsApp/email daily summaries, Arabic/Hindi/Urdu
+- Housing rent allocation across sites, equipment maintenance log
