@@ -182,16 +182,16 @@ End of day:
 Based on answers above:
 
 ### Build
-- [ ] Expense entry with pre-set categories (fixed / variable)
-- [ ] Mall contract cost auto-linked from site contracts
-- [ ] Staff food cost auto-calculated (daily allowance × active staff)
+- [x] Expense entry with pre-set categories (fixed / variable)
+- [x] Mall contract cost auto-linked from site contracts
+- [x] Staff food cost auto-calculated (daily allowance × active staff)
 - [ ] Housing rent as monthly fixed cost (org-wide, allocated to sites)
-- [ ] Equipment registry (manual entry + optional file import)
+- [x] Equipment registry (manual entry + optional file import)
 - [ ] Equipment maintenance log
-- [ ] Monthly P&L per site
-- [ ] Cost per wash calculation
-- [ ] Daily cash reconciliation (revenue vs deposited)
-- [ ] Expense approval workflow (manager submits → admin approves)
+- [x] Monthly P&L per site
+- [x] Cost per wash calculation
+- [x] Daily cash reconciliation (revenue vs deposited)
+- [x] Expense approval workflow (manager submits → admin approves)
 
 ### Not needed (confirmed)
 - Mall revenue share / commission calculation
