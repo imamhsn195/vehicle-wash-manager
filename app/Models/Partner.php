@@ -40,4 +40,9 @@ class Partner extends Model
     {
         return $this->hasMany(PartnerSiteShare::class);
     }
+
+    public function settlements(): HasMany
+    {
+        return $this->hasMany(PartnerSettlement::class);
+    }
 }
