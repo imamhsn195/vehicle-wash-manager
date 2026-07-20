@@ -324,5 +324,22 @@ class DatabaseSeeder extends Seeder
             ], $admin),
             $admin
         );
+
+        $payrollService = new \App\Services\PayrollService;
+        $payoutService = new \App\Services\PartnerPayoutService(
+            new \App\Services\PnLService($expenseService)
+        );
+
+        foreach ($sites as $site) {
+            $payrollService->generateForSite(
+                $site,
+                now()->startOfMonth(),
+                now()->endOfMonth()
+            );
+        }
+
+        foreach (Partner::all() as $partner) {
+            $payoutService->createSettlement($partner, now()->year, now()->month);
+        }
     }
 }

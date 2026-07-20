@@ -199,9 +199,9 @@ Based on answers above:
 - Historical expense Excel import (unless they find data later)
 
 ### Defer to Phase 3
-- Partner monthly payout reports
-- Mixed payroll calculation
-- Equipment depreciation in formal reports
+- [x] Partner monthly payout reports
+- [x] Mixed payroll calculation
+- [ ] Equipment depreciation in formal reports
 
 ---
 
@@ -232,9 +232,9 @@ Based on answers above, Phase 1 should include:
 - Arabic language
 
 ### Defer to Phase 3
-- Partner portal and monthly payout reports
-- Mixed payroll calculation
-- Hindi + Urdu languages
+- [x] Partner portal and monthly payout reports
+- [x] Mixed payroll calculation
+- [ ] Hindi + Urdu languages
 
 ---
 
