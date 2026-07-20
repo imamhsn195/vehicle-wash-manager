@@ -38,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
+                \App\Filament\Widgets\AlertsWidget::class,
                 \App\Filament\Widgets\OverviewStats::class,
                 \App\Filament\Widgets\SiteRevenueToday::class,
                 \App\Filament\Widgets\StaffProductivityToday::class,
