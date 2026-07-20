@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vehicle Wash Manager
 
-## Getting Started
+Multi-site vehicle wash business management system built with **Laravel 11 + Filament v3**.
 
-First, run the development server:
+## Features (Phase 1)
+
+- Mall site & contract management
+- Staff registry with pay types and site assignments
+- Daily wash logging (morning/evening shifts)
+- Mobile-friendly **Quick Daily Log** page for managers
+- Owner dashboard: cars today, revenue by site, staff productivity
+- Dummy seed data for demo (4 sites, 20 staff, 30 days of logs)
+- English + Bangla UI strings
+
+## Requirements
+
+- PHP 8.2+
+- Composer
+- SQLite (default) or PostgreSQL
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan serve
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open **http://localhost:8000/admin**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo Logins
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@carwash.test | password |
+| Site Manager | karim@carwash.test | password |
+| Accountant | accountant@carwash.test | password |
+| Partner | partner1@carwash.test | password |
 
-## Learn More
+## Documentation
 
-To learn more about Next.js, take a look at the following resources:
+| Document | Description |
+|----------|-------------|
+| [PLAN.md](docs/PLAN.md) | Full system plan |
+| [BUSINESS_REQUIREMENTS.md](docs/BUSINESS_REQUIREMENTS.md) | Business requirements |
+| [TECH_STACK.md](docs/TECH_STACK.md) | Laravel + Filament stack |
+| [SYSTEM_DESIGN.md](docs/SYSTEM_DESIGN.md) | Architecture |
+| [CLIENT_DISCOVERY.md](docs/CLIENT_DISCOVERY.md) | Client answers |
+| [DUMMY_DATA.md](docs/DUMMY_DATA.md) | Seed data reference |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Laravel 11
+- Filament v3
+- SQLite / PostgreSQL
+- Livewire (Quick Daily Log page)
 
-## Deploy on Vercel
+## Next Phases
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Phase 2:** Expenses, P&L, cash reconciliation
+- **Phase 3:** Partner payouts, payroll, Arabic/Hindi/Urdu
