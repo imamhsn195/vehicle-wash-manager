@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\DailyLog;
 use App\Models\WashEntry;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class AnalyticsService
 {
