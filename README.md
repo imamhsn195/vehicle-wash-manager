@@ -54,6 +54,7 @@ Open **http://localhost:8000/admin**
 | [SYSTEM_DESIGN.md](docs/SYSTEM_DESIGN.md) | Architecture |
 | [CLIENT_DISCOVERY.md](docs/CLIENT_DISCOVERY.md) | Client answers |
 | [DUMMY_DATA.md](docs/DUMMY_DATA.md) | Seed data reference |
+| [TDD.md](docs/TDD.md) | Test-driven development workflow |
 
 ## Running tests
 
@@ -72,5 +73,5 @@ See [docs/TDD.md](docs/TDD.md) for the test-driven development workflow.
 
 ## Next Phases
 
-- **Phase 2:** Expenses, P&L, cash reconciliation
 - **Phase 3:** Partner payouts, payroll, Arabic/Hindi/Urdu
+- **Phase 4:** Break-even alerts, contract renewal reminders, Excel export
