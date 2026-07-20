@@ -2,11 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ExpenseCategory;
+use App\Enums\ExpenseType;
 use App\Enums\PaymentMethod;
 use App\Enums\Shift;
 use App\Enums\UserRole;
 use App\Models\Contract;
 use App\Models\DailyLog;
+use App\Models\Equipment;
+use App\Models\Expense;
 use App\Models\Organization;
 use App\Models\Partner;
 use App\Models\PartnerSiteShare;
@@ -16,6 +20,7 @@ use App\Models\Staff;
 use App\Models\StaffAssignment;
 use App\Models\User;
 use App\Models\WashEntry;
+use App\Services\ExpenseService;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -264,5 +269,60 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+
+        $expenseService = new ExpenseService;
+
+        foreach ($sites as $site) {
+            Equipment::create([
+                'site_id' => $site->id,
+                'name' => 'Pressure Washer',
+                'purchase_date' => now()->subMonths(8),
+                'purchase_cost' => 45000,
+                'status' => 'active',
+            ]);
+
+            Equipment::create([
+                'site_id' => $site->id,
+                'name' => 'Vacuum Cleaner',
+                'purchase_date' => now()->subMonths(6),
+                'purchase_cost' => 18000,
+                'status' => 'active',
+            ]);
+
+            $expense = $expenseService->submit([
+                'organization_id' => $org->id,
+                'site_id' => $site->id,
+                'type' => ExpenseType::Variable->value,
+                'category' => ExpenseCategory::Consumables->value,
+                'description' => 'Monthly chemicals & towels',
+                'amount' => rand(3000, 8000),
+                'date' => now()->subDays(5)->toDateString(),
+            ], $admin);
+
+            $expenseService->approve($expense, $admin);
+
+            $expenseService->submit([
+                'organization_id' => $org->id,
+                'site_id' => $site->id,
+                'type' => ExpenseType::Variable->value,
+                'category' => ExpenseCategory::Utilities->value,
+                'description' => 'Water pump electricity',
+                'amount' => rand(1500, 3500),
+                'date' => now()->toDateString(),
+            ], $sites->first()->manager ?? $admin);
+        }
+
+        $expenseService->approve(
+            $expenseService->submit([
+                'organization_id' => $org->id,
+                'site_id' => null,
+                'type' => ExpenseType::Fixed->value,
+                'category' => ExpenseCategory::StaffHousing->value,
+                'description' => 'Staff housing monthly rent',
+                'amount' => 80000,
+                'date' => now()->startOfMonth()->toDateString(),
+            ], $admin),
+            $admin
+        );
     }
 }
