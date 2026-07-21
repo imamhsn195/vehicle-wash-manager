@@ -1,0 +1,21 @@
+# =============================================================================
+# cPanel Cron Jobs — Vehicle Wash Manager (vehiclewash.cpanel.site)
+# =============================================================================
+# Replace YOUR_USER and PHP path. Project root = folder with artisan.
+#
+# which php
+# ls /opt/cpanel/ea-php83/root/usr/bin/php
+# =============================================================================
+
+# --- AUTO-DEPLOY when GitHub has new commits (every 5 minutes) ---
+*/5 * * * * cd /home/YOUR_USER/vehicle-wash-manager && /bin/bash scripts/cpanel-deploy.sh >/dev/null 2>&1
+
+# --- Laravel scheduler (every minute) — renewals 08:00 + daily summary 21:00 ---
+* * * * * cd /home/YOUR_USER/vehicle-wash-manager && /usr/local/bin/php artisan schedule:run >> /dev/null 2>&1
+
+# --- OPTIONAL: debug deploy logs ---
+# */5 * * * * cd /home/YOUR_USER/vehicle-wash-manager && /bin/bash scripts/cpanel-deploy.sh >> storage/logs/cpanel-deploy-cron.log 2>&1
+
+# =============================================================================
+# Full recipe: docs/CPANEL_DEPLOY_RECIPE.md
+# =============================================================================

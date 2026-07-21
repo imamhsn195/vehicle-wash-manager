@@ -1,0 +1,9 @@
+# Force HTTPS on cPanel (optional)
+# Place these lines ABOVE the existing Laravel rewrite rules if needed,
+# or enable "Force HTTPS Redirect" in cPanel → Domains.
+
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteCond %{HTTPS} off
+#     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
