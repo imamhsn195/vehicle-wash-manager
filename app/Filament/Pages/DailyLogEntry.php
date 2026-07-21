@@ -6,6 +6,7 @@ use App\Enums\PaymentMethod;
 use App\Enums\Shift;
 use App\Enums\UserRole;
 use App\Exceptions\NoActiveServiceTypeException;
+use App\Models\ServiceType;
 use App\Models\Site;
 use App\Models\Staff;
 use App\Services\DailyLogService;
@@ -41,8 +42,13 @@ class DailyLogEntry extends Page implements HasForms
             ? $user->managedSites()->value('id')
             : Site::query()->value('id');
 
+        $defaultServiceId = $siteId
+            ? ServiceType::query()->where('site_id', $siteId)->where('is_active', true)->orderBy('id')->value('id')
+            : null;
+
         $this->form->fill([
             'site_id' => $siteId,
+            'service_type_id' => $defaultServiceId,
             'date' => now()->toDateString(),
             'shift' => Shift::Morning->value,
             'staff_id' => null,
@@ -60,8 +66,22 @@ class DailyLogEntry extends Page implements HasForms
                     ->options(fn () => $this->getAvailableSites())
                     ->required()
                     ->live()
+                    ->afterStateUpdated(function (Forms\Set $set, $state) {
+                        $set('staff_id', null);
+                        $set(
+                            'service_type_id',
+                            $state
+                                ? ServiceType::query()->where('site_id', $state)->where('is_active', true)->orderBy('id')->value('id')
+                                : null
+                        );
+                    })
                     ->disabled(fn () => auth()->user()?->isSiteManager())
                     ->dehydrated(),
+                Forms\Components\Select::make('service_type_id')
+                    ->label(__('Service'))
+                    ->options(fn (Forms\Get $get) => $this->getServicesForSite($get('site_id')))
+                    ->required()
+                    ->helperText(__('Price comes from the selected service.')),
                 Forms\Components\DatePicker::make('date')
                     ->label(__('Date'))
                     ->required()
@@ -141,6 +161,23 @@ class DailyLogEntry extends Page implements HasForms
             ->whereHas('assignments', fn ($q) => $q->where('site_id', $siteId))
             ->where('is_active', true)
             ->pluck('name', 'id')
+            ->all();
+    }
+
+    protected function getServicesForSite(?int $siteId): array
+    {
+        if (! $siteId) {
+            return [];
+        }
+
+        return ServiceType::query()
+            ->where('site_id', $siteId)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get()
+            ->mapWithKeys(fn (ServiceType $service) => [
+                $service->id => sprintf('%s (৳%s)', $service->name, number_format((float) $service->price, 0)),
+            ])
             ->all();
     }
 }

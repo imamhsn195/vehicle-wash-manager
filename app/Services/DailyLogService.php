@@ -14,7 +14,17 @@ class DailyLogService
 {
     public function recordEntry(array $data, User $submitter): WashEntry
     {
-        $serviceType = $this->findActiveServiceType($data['site_id']);
+        $serviceType = null;
+
+        if (! empty($data['service_type_id'])) {
+            $serviceType = ServiceType::query()
+                ->where('id', $data['service_type_id'])
+                ->where('site_id', $data['site_id'])
+                ->where('is_active', true)
+                ->first();
+        }
+
+        $serviceType ??= $this->findActiveServiceType($data['site_id']);
 
         if (! $serviceType) {
             throw new NoActiveServiceTypeException;
@@ -56,6 +66,7 @@ class DailyLogService
         return ServiceType::query()
             ->where('site_id', $siteId)
             ->where('is_active', true)
+            ->orderBy('id')
             ->first();
     }
 }

@@ -56,6 +56,7 @@ class SiteResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('serviceTypes')->withCount('serviceTypes'))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -63,9 +64,26 @@ class SiteResource extends Resource
                 Tables\Columns\TextColumn::make('city'),
                 Tables\Columns\TextColumn::make('manager.name')
                     ->label('Manager'),
-                Tables\Columns\TextColumn::make('primaryServiceType.price')
-                    ->label('Wash Price')
-                    ->money('BDT'),
+                Tables\Columns\TextColumn::make('services_summary')
+                    ->label('Services & Prices')
+                    ->getStateUsing(fn (Site $record) => $record->serviceTypes
+                        ->map(fn ($service) => sprintf(
+                            '%s — ৳%s%s',
+                            $service->name,
+                            number_format((float) $service->price, 0),
+                            $service->is_active ? '' : ' (inactive)'
+                        ))
+                        ->values()
+                        ->all())
+                    ->listWithLineBreaks()
+                    ->bulleted()
+                    ->limitList(5)
+                    ->expandableLimitedList()
+                    ->placeholder('No services'),
+                Tables\Columns\TextColumn::make('serviceTypes_count')
+                    ->label('Services')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
             ])

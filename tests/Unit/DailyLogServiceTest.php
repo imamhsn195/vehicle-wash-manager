@@ -68,4 +68,22 @@ class DailyLogServiceTest extends TestCase
 
         $this->service->recordEntry($this->validEntryData(), $this->manager);
     }
+
+    public function test_it_uses_explicit_service_type_when_provided(): void
+    {
+        $premium = \App\Models\ServiceType::create([
+            'site_id' => $this->site->id,
+            'name' => 'Premium Wash',
+            'price' => 350,
+            'is_active' => true,
+        ]);
+
+        $entry = $this->service->recordEntry(
+            $this->validEntryData(['service_type_id' => $premium->id]),
+            $this->manager
+        );
+
+        $this->assertEquals($premium->id, $entry->service_type_id);
+        $this->assertEquals(350.0, $entry->fresh()->serviceType->price);
+    }
 }
