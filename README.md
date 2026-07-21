@@ -50,6 +50,14 @@ Open **http://localhost:8000/admin**
 | Site Manager | karim@carwash.test | password |
 | Accountant | accountant@carwash.test | password |
 | Partner | partner1@carwash.test | password |
+| Staff | staff1@carwash.test | password |
+
+## Scheduled jobs
+
+```bash
+php artisan wash:daily-summary   # email admins today's summary
+php artisan schedule:work        # renewals 08:00, summary 21:00
+```
 
 ## Documentation
 
@@ -78,7 +86,9 @@ See [docs/TDD.md](docs/TDD.md) for the test-driven development workflow.
 - SQLite / PostgreSQL
 - Livewire (Quick Daily Log page)
 
-## Next Phases
+## Next / optional
 
-- **Phase 5:** Staff self-view, WhatsApp/email daily summaries, Arabic/Hindi/Urdu
-- Housing rent allocation across sites, equipment maintenance log
+- WhatsApp daily summaries (API integration)
+- Housing rent allocation across sites
+- Equipment maintenance log
+- PDF partner statements

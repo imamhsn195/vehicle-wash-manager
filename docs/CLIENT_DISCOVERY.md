@@ -241,6 +241,11 @@ Based on answers above, Phase 1 should include:
 - [x] Missing daily log alerts
 - [x] Excel export (logs, expenses, P&L)
 
+### Phase 5 (done)
+- [x] Staff My Stats self-view
+- [x] Daily summary email to admins
+- [x] Arabic, Hindi, Urdu (+ language switcher)
+
 ---
 
 ## Data Strategy
