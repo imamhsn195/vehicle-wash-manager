@@ -12,11 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Ensure money helpers exist even if Composer autoload was not refreshed yet.
-        $helpers = app_path('Support/helpers.php');
-        if (is_file($helpers)) {
-            require_once $helpers;
-        }
+        //
     }
 
     /**

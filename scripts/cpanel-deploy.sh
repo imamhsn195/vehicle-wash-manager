@@ -144,48 +144,47 @@ fi
 log "local=$LOCAL_SHA"
 log "remote=$REMOTE_SHA"
 
-if [ "$LOCAL_SHA" = "$REMOTE_SHA" ] && [ "$DEPLOY_FORCE" != "1" ]; then
-  # Still apply any pending migrations (e.g. code was pulled by hand earlier)
-  PENDING="$("$DEPLOY_PHP" artisan migrate:status 2>/dev/null | grep -c 'Pending' || true)"
-  if [ "${PENDING:-0}" -gt 0 ]; then
-    log "No new commits, but $PENDING pending migration(s) — applying"
-    "$DEPLOY_PHP" artisan migrate --force 2>&1 | tee -a "$LOG_FILE" \
-      || fail "migrate failed"
-    "$DEPLOY_PHP" artisan config:cache >>"$LOG_FILE" 2>&1 || true
-    log "Pending migrations applied."
-  else
-    log "No new commits — nothing to deploy."
+CODE_CHANGED=0
+if [ "$LOCAL_SHA" != "$REMOTE_SHA" ] || [ "$DEPLOY_FORCE" = "1" ]; then
+  CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+  if [ "$CURRENT_BRANCH" != "$DEPLOY_BRANCH" ]; then
+    log "Checking out $DEPLOY_BRANCH (was $CURRENT_BRANCH)"
+    git checkout "$DEPLOY_BRANCH" 2>&1 | tee -a "$LOG_FILE" || fail "git checkout failed"
   fi
-  log "======== cpanel-deploy end (noop) ========"
-  exit 0
-fi
 
-CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-if [ "$CURRENT_BRANCH" != "$DEPLOY_BRANCH" ]; then
-  log "Checking out $DEPLOY_BRANCH (was $CURRENT_BRANCH)"
-  git checkout "$DEPLOY_BRANCH" 2>&1 | tee -a "$LOG_FILE" || fail "git checkout failed"
+  if [ "$LOCAL_SHA" != "$REMOTE_SHA" ]; then
+    log "Pulling $DEPLOY_REMOTE/$DEPLOY_BRANCH (ff-only)"
+    git pull --ff-only "$DEPLOY_REMOTE" "$DEPLOY_BRANCH" 2>&1 | tee -a "$LOG_FILE" || fail "git pull --ff-only failed"
+    CODE_CHANGED=1
+  else
+    log "No new commits — still running migrate/composer (DEPLOY_FORCE=$DEPLOY_FORCE)"
+  fi
+else
+  log "No new commits — still running migrate + autoload refresh"
 fi
-
-log "Pulling $DEPLOY_REMOTE/$DEPLOY_BRANCH (ff-only)"
-git pull --ff-only "$DEPLOY_REMOTE" "$DEPLOY_BRANCH" 2>&1 | tee -a "$LOG_FILE" || fail "git pull --ff-only failed"
 
 # ---------------------------------------------------------------------------
-# Build / migrate / cache
+# Always: composer autoload, migrate, optional seed, caches
 # ---------------------------------------------------------------------------
 log "Maintenance mode ON"
 "$DEPLOY_PHP" artisan down --retry=60 >>"$LOG_FILE" 2>&1 || true
 
-log "composer install --no-dev"
-"${COMPOSER_CMD[@]}" install --no-dev --optimize-autoloader --no-interaction 2>&1 | tee -a "$LOG_FILE" \
-  || { "$DEPLOY_PHP" artisan up >>"$LOG_FILE" 2>&1 || true; fail "composer install failed"; }
+if [ "$CODE_CHANGED" = "1" ] || [ "$DEPLOY_FORCE" = "1" ]; then
+  log "composer install --no-dev"
+  "${COMPOSER_CMD[@]}" install --no-dev --optimize-autoloader --no-interaction 2>&1 | tee -a "$LOG_FILE" \
+    || { "$DEPLOY_PHP" artisan up >>"$LOG_FILE" 2>&1 || true; fail "composer install failed"; }
+fi
 
 log "composer dump-autoload -o"
-"${COMPOSER_CMD[@]}" dump-autoload -o --no-interaction 2>&1 | tee -a "$LOG_FILE" || true
+"${COMPOSER_CMD[@]}" dump-autoload -o --no-interaction 2>&1 | tee -a "$LOG_FILE" \
+  || { "$DEPLOY_PHP" artisan up >>"$LOG_FILE" 2>&1 || true; fail "composer dump-autoload failed"; }
 
-log "migrate --force"
+log "migrate --force (always)"
 "$DEPLOY_PHP" artisan migrate --force 2>&1 | tee -a "$LOG_FILE" \
   || { "$DEPLOY_PHP" artisan up >>"$LOG_FILE" 2>&1 || true; fail "migrate failed"; }
 
+# Seed is optional: DatabaseSeeder creates demo users/sites and is NOT safe to re-run
+# on a live DB. Set DEPLOY_RUN_SEEDER=1 in .env.deploy only for fresh/demo installs.
 if [ "$DEPLOY_RUN_SEEDER" = "1" ]; then
   log "db:seed --force (DEPLOY_RUN_SEEDER=1)"
   "$DEPLOY_PHP" artisan db:seed --force 2>&1 | tee -a "$LOG_FILE" || log "WARN: seeder failed (continuing)"
@@ -199,7 +198,6 @@ log "optimize caches"
 "$DEPLOY_PHP" artisan config:cache >>"$LOG_FILE" 2>&1 || true
 "$DEPLOY_PHP" artisan route:cache >>"$LOG_FILE" 2>&1 || true
 "$DEPLOY_PHP" artisan view:cache >>"$LOG_FILE" 2>&1 || true
-# filament assets are committed in the repo — do not republish (dirtifies working tree)
 
 log "permissions storage + bootstrap/cache (dirs/writable files only)"
 find storage bootstrap/cache -type d -exec chmod ug+rwx {} + 2>/dev/null || true
