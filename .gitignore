@@ -28,3 +28,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# cPanel / local Composer installer
+/composer.phar
+/composer-setup.php
