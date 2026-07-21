@@ -26,6 +26,7 @@ class User extends Authenticatable implements FilamentUser
         'role',
         'phone',
         'is_active',
+        'locale',
     ];
 
     protected $hidden = [
