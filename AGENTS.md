@@ -6,6 +6,14 @@ Vehicle Wash Manager is a single Laravel 13 + Filament v3 web app (PHP 8.3, SQLi
 default, Vite 8 + Tailwind 4 for assets). The admin panel is the whole product and lives
 at `http://localhost:8000/admin` (login at `/admin/login`).
 
+### Git / PR workflow (required)
+
+- Every feature or fix goes on a branch named `cursor/<descriptive-name>-7c7f`.
+- Open a PR into `main` for that branch (do not leave work only on a long-lived feature branch).
+- Prefer **delete branch after merge**. After a PR is merged, delete the remote feature
+  branch if it still exists: `git push origin --delete <branch-name>`.
+- Do not keep merged feature branches around unless the user asks to keep them.
+
 ### Services
 
 - Web app: `php artisan serve --host=0.0.0.0 --port=8000` (serves the Filament admin +
