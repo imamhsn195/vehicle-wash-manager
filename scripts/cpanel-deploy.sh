@@ -97,7 +97,8 @@ git config core.fileMode false >/dev/null 2>&1 || true
 
 # Soft-clean noise that shared hosting / prior deploys leave behind
 reset_deploy_noise() {
-  rm -f "$APP_DIR/public/error_log" "$APP_DIR/composer-setup.php" 2>/dev/null || true
+  rm -f "$APP_DIR/error_log" "$APP_DIR/public/error_log" "$APP_DIR/composer-setup.php" 2>/dev/null || true
+  find "$APP_DIR" -name error_log -type f -not -path '*/vendor/*' -not -path '*/.git/*' -delete 2>/dev/null || true
   # Filament assets are committed in git — discard accidental republish diffs
   git checkout -- \
     public/js/filament \
