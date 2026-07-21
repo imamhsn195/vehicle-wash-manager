@@ -92,3 +92,21 @@ See [docs/TDD.md](docs/TDD.md) for the test-driven development workflow.
 - Housing rent allocation across sites
 - Equipment maintenance log
 - PDF partner statements
+
+## cPanel deploy (vehiclewash.cpanel.site)
+
+See **[deploy/cpanel/README.md](deploy/cpanel/README.md)** for full checklist.
+
+```bash
+# First time
+git clone https://github.com/imamhsn195/vehicle-wash-manager.git
+cd vehicle-wash-manager
+chmod +x deploy/cpanel/*.sh
+./deploy/cpanel/setup-first.sh   # creates .env — edit DB/URL, re-run
+
+# Point domain document root → .../vehicle-wash-manager/public
+# Add cron from deploy/cpanel/cron.txt
+
+# Every update
+./deploy/cpanel/pull-and-deploy.sh
+```
