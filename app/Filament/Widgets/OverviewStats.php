@@ -10,18 +10,32 @@ class OverviewStats extends BaseWidget
 {
     protected static ?int $sort = 1;
 
+    protected int|string|array $columnSpan = 'full';
+
     protected function getStats(): array
     {
         $analytics = app(AnalyticsService::class);
 
+        $carsToday = $analytics->carsToday();
+        $carsYesterday = $analytics->carsOnDate(today()->subDay());
+        $carsChange = $analytics->percentChange($carsToday, $carsYesterday);
+
+        $revenueToday = $analytics->revenueToday();
+        $revenueYesterday = $analytics->revenueOnDate(today()->subDay());
+        $revenueChange = $analytics->percentChange($revenueToday, $revenueYesterday);
+
+        $series = $analytics->revenueAndCarsLastDays(7);
+
         return [
-            Stat::make(__('Cars Today'), number_format($analytics->carsToday()))
-                ->description(__('Across all sites'))
-                ->descriptionIcon('heroicon-m-truck')
-                ->color('success'),
-            Stat::make(__('Revenue Today'), money_format_app($analytics->revenueToday()))
-                ->description(__('From wash logs'))
-                ->descriptionIcon('heroicon-m-banknotes')
+            Stat::make(__('Cars Today'), number_format($carsToday))
+                ->description($this->trendLabel($carsChange, __('vs yesterday')))
+                ->descriptionIcon($carsChange >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
+                ->chart($series['cars'])
+                ->color($carsChange >= 0 ? 'success' : 'danger'),
+            Stat::make(__('Revenue Today'), money_format_app($revenueToday))
+                ->description($this->trendLabel($revenueChange, __('vs yesterday')))
+                ->descriptionIcon($revenueChange >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
+                ->chart($series['revenue'])
                 ->color('primary'),
             Stat::make(__('Active Sites'), (string) \App\Models\Site::where('is_active', true)->count())
                 ->description(__('Mall locations'))
@@ -32,5 +46,12 @@ class OverviewStats extends BaseWidget
                 ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
         ];
+    }
+
+    protected function trendLabel(float $change, string $suffix): string
+    {
+        $prefix = $change >= 0 ? '+' : '';
+
+        return sprintf('%s%s%% %s', $prefix, number_format($change, 1), $suffix);
     }
 }

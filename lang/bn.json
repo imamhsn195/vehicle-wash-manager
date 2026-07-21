@@ -48,5 +48,16 @@
     "Currency updated": "মুদ্রা আপডেট হয়েছে",
     "Preview": "প্রিভিউ",
     "No organization found": "কোনো প্রতিষ্ঠান পাওয়া যায়নি",
-    "Settlement created": "সেটেলমেন্ট তৈরি হয়েছে"
+    "Settlement created": "সেটেলমেন্ট তৈরি হয়েছে",
+    "Welcome back, :name": "ফিরে আসার জন্য স্বাগতম, :name",
+    "Welcome back to Vehicle Wash Manager": "ভিহিকল ওয়াশ ম্যানেজারে স্বাগতম",
+    "vs yesterday": "গতকালের তুলনায়",
+    "Revenue Stream": "রাজস্ব প্রবাহ",
+    "Daily performance & wash volume (last 7 days)": "দৈনিক পারফরম্যান্স ও ওয়াশ ভলিউম (গতশেষ ৭ দিন)",
+    "Upcoming lease deadlines": "আসন্ন লিজের সময়সীমা",
+    "Sites with no wash entry today": "আজ ওয়াশ এন্ট্রি নেই এমন সাইট",
+    "Latest activity across mall locations": "মল লোকেশন জুড়ে সর্বশেষ কার্যক্রম",
+    "Top washers by cars today": "আজকের শীর্ষ ওয়াশার",
+    "Daily Revenue by Site": "সাইট অনুযায়ী দৈনিক রাজস্ব",
+    "Staff Productivity": "স্টাফ উৎপাদনশীলতা"
 }

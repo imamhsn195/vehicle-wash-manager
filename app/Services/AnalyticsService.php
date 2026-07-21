@@ -13,12 +13,50 @@ class AnalyticsService
         return $this->washEntriesQuery(today(), $siteId)->sum('vehicle_count');
     }
 
+    public function carsOnDate(Carbon $date, ?int $siteId = null): int
+    {
+        return $this->washEntriesQuery($date, $siteId)->sum('vehicle_count');
+    }
+
     public function revenueToday(?int $siteId = null): float
     {
-        return (float) $this->washEntriesQuery(today(), $siteId)
+        return $this->revenueOnDate(today(), $siteId);
+    }
+
+    public function revenueOnDate(Carbon $date, ?int $siteId = null): float
+    {
+        return (float) $this->washEntriesQuery($date, $siteId)
             ->join('service_types', 'wash_entries.service_type_id', '=', 'service_types.id')
             ->selectRaw('SUM(wash_entries.vehicle_count * COALESCE(wash_entries.amount, service_types.price)) as total')
             ->value('total');
+    }
+
+    /**
+     * @return array{labels: list<string>, revenue: list<float>, cars: list<int>}
+     */
+    public function revenueAndCarsLastDays(int $days = 7): array
+    {
+        $labels = [];
+        $revenue = [];
+        $cars = [];
+
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = today()->subDays($i);
+            $labels[] = $date->format('D');
+            $revenue[] = round($this->revenueOnDate($date), 2);
+            $cars[] = $this->carsOnDate($date);
+        }
+
+        return compact('labels', 'revenue', 'cars');
+    }
+
+    public function percentChange(float|int $current, float|int $previous): float
+    {
+        if ((float) $previous == 0.0) {
+            return $current > 0 ? 100.0 : 0.0;
+        }
+
+        return round((($current - $previous) / $previous) * 100, 1);
     }
 
     public function revenueBySiteToday(): Collection

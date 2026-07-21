@@ -48,5 +48,16 @@
     "Currency updated": "Currency updated",
     "Preview": "Preview",
     "No organization found": "No organization found",
-    "Settlement created": "Settlement created"
+    "Settlement created": "Settlement created",
+    "Welcome back, :name": "Welcome back, :name",
+    "Welcome back to Vehicle Wash Manager": "Welcome back to Vehicle Wash Manager",
+    "vs yesterday": "vs yesterday",
+    "Revenue Stream": "Revenue Stream",
+    "Daily performance & wash volume (last 7 days)": "Daily performance & wash volume (last 7 days)",
+    "Upcoming lease deadlines": "Upcoming lease deadlines",
+    "Sites with no wash entry today": "Sites with no wash entry today",
+    "Latest activity across mall locations": "Latest activity across mall locations",
+    "Top washers by cars today": "Top washers by cars today",
+    "Daily Revenue by Site": "Daily Revenue by Site",
+    "Staff Productivity": "Staff Productivity"
 }

@@ -11,9 +11,12 @@ class AlertsWidget extends Widget
 
     protected static ?string $heading = 'Alerts';
 
-    protected static ?int $sort = 0;
+    protected static ?int $sort = 3;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = [
+        'md' => 2,
+        'xl' => 2,
+    ];
 
     public function getRenewals(): array
     {

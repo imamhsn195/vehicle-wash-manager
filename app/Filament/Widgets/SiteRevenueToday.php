@@ -11,9 +11,12 @@ class SiteRevenueToday extends Widget
 
     protected static ?string $heading = 'Daily Revenue by Site';
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 4;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = [
+        'md' => 2,
+        'xl' => 2,
+    ];
 
     public function getSites(): array
     {

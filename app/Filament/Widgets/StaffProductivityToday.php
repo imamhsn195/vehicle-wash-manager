@@ -11,9 +11,12 @@ class StaffProductivityToday extends Widget
 
     protected static ?string $heading = 'Staff Productivity Today';
 
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 5;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = [
+        'md' => 2,
+        'xl' => 2,
+    ];
 
     public function getStaff(): array
     {

@@ -48,5 +48,16 @@
     "Currency updated": "تم تحديث العملة",
     "Preview": "معاينة",
     "No organization found": "لم يتم العثور على مؤسسة",
-    "Settlement created": "تم إنشاء التسوية"
+    "Settlement created": "تم إنشاء التسوية",
+    "Welcome back, :name": "مرحبًا بعودتك، :name",
+    "Welcome back to Vehicle Wash Manager": "مرحبًا بعودتك إلى مدير غسيل المركبات",
+    "vs yesterday": "مقارنة بالأمس",
+    "Revenue Stream": "تدفق الإيرادات",
+    "Daily performance & wash volume (last 7 days)": "الأداء اليومي وحجم الغسيل (آخر 7 أيام)",
+    "Upcoming lease deadlines": "مواعيد إيجار قادمة",
+    "Sites with no wash entry today": "مواقع بلا إدخال غسيل اليوم",
+    "Latest activity across mall locations": "أحدث النشاط عبر مواقع المولات",
+    "Top washers by cars today": "أفضل الغسّالين حسب السيارات اليوم",
+    "Daily Revenue by Site": "الإيرادات اليومية حسب الموقع",
+    "Staff Productivity": "إنتاجية الموظفين"
 }
