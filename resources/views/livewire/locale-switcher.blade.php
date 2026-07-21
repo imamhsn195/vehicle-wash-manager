@@ -2,14 +2,16 @@
     x-data="{ open: false }"
     class="relative"
     wire:key="locale-switcher-{{ $current }}"
+    @keydown.escape.window="open = false"
+    @click.outside="open = false"
 >
     <button
         type="button"
-        @click="open = ! open"
-        @keydown.escape.window="open = false"
+        @click.stop="open = ! open"
         class="fi-icon-btn relative flex items-center justify-center gap-x-1.5 rounded-lg px-2.5 py-1.5 text-sm font-semibold outline-none transition duration-75 hover:bg-gray-400/10 focus-visible:bg-gray-400/10 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
         aria-label="{{ __('Language') }}"
         title="{{ __('Language') }}"
+        :aria-expanded="open.toString()"
     >
         <x-filament::icon
             icon="heroicon-m-language"
@@ -33,7 +35,7 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
-        @click.outside="open = false"
+        @click.stop
         class="fi-dropdown-panel absolute end-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white p-1.5 shadow-lg ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10"
         style="display: none;"
     >
