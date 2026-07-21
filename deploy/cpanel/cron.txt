@@ -1,0 +1,34 @@
+# =============================================================================
+# cPanel Cron Jobs for Vehicle Wash Manager
+# Domain: vehiclewash.cpanel.site
+# =============================================================================
+# Replace YOUR_CPANEL_USER and PHP path with your real values.
+#
+# Find PHP path via SSH:
+#   which php
+#   # or MultiPHP:
+#   ls /opt/cpanel/ea-php83/root/usr/bin/php
+#   ls /opt/cpanel/ea-php82/root/usr/bin/php
+#
+# App path example:
+#   /home/YOUR_CPANEL_USER/vehicle-wash-manager
+# =============================================================================
+
+# --- REQUIRED: Laravel scheduler (every minute) ---
+# Runs: contract renewal flag (08:00) + daily summary email (21:00)
+* * * * * cd /home/YOUR_CPANEL_USER/vehicle-wash-manager && /usr/local/bin/php artisan schedule:run >> /dev/null 2>&1
+
+# --- OPTIONAL: log scheduler output for debugging (first week) ---
+# * * * * * cd /home/YOUR_CPANEL_USER/vehicle-wash-manager && /usr/local/bin/php artisan schedule:run >> storage/logs/scheduler.log 2>&1
+
+# --- OPTIONAL: nightly DB backup (mysqldump) ---
+# 15 2 * * * mysqldump -u DB_USER -p'DB_PASS' DB_NAME | gzip > /home/YOUR_CPANEL_USER/backups/vw-$(date +\%F).sql.gz
+
+# --- OPTIONAL: auto-deploy on a schedule (only if you push often) ---
+# 0 */6 * * * cd /home/YOUR_CPANEL_USER/vehicle-wash-manager && git pull --ff-only && ./deploy/cpanel/deploy.sh >> storage/logs/deploy.log 2>&1
+
+# =============================================================================
+# What Laravel schedule already runs (no extra cron needed):
+#   08:00  flag-contract-renewals
+#   21:00  wash:daily-summary
+# =============================================================================
