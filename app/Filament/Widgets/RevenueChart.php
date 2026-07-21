@@ -37,8 +37,8 @@ class RevenueChart extends ChartWidget
                 [
                     'label' => __('Revenue'),
                     'data' => $series['revenue'],
-                    'borderColor' => 'rgb(13, 148, 136)',
-                    'backgroundColor' => 'rgba(13, 148, 136, 0.12)',
+                    'borderColor' => 'rgb(14, 165, 233)',
+                    'backgroundColor' => 'rgba(14, 165, 233, 0.12)',
                     'fill' => true,
                     'tension' => 0.35,
                     'yAxisID' => 'y',
@@ -46,8 +46,8 @@ class RevenueChart extends ChartWidget
                 [
                     'label' => __('Cars'),
                     'data' => $series['cars'],
-                    'borderColor' => 'rgb(245, 158, 11)',
-                    'backgroundColor' => 'rgba(245, 158, 11, 0.08)',
+                    'borderColor' => 'rgb(113, 113, 122)',
+                    'backgroundColor' => 'rgba(113, 113, 122, 0.08)',
                     'fill' => false,
                     'tension' => 0.35,
                     'yAxisID' => 'y1',

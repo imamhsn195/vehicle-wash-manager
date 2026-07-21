@@ -33,9 +33,9 @@ class AdminPanelProvider extends PanelProvider
             ->defaultThemeMode(ThemeMode::Light)
             ->colors([
                 'danger' => Color::Rose,
-                'gray' => Color::Slate,
-                'info' => Color::Sky,
-                'primary' => Color::Teal,
+                'gray' => Color::Zinc,
+                'info' => Color::Blue,
+                'primary' => Color::Sky,
                 'success' => Color::Emerald,
                 'warning' => Color::Amber,
             ])

@@ -7,12 +7,12 @@
 @config 'tailwind.config.js';
 
 /*
- | Premium CRM polish — Filament class hooks only (no custom layout system).
- | Inspired by modern CRM dashboards: soft canvas, elevated cards, clear hierarchy.
+ | Light CRM palette — layout unchanged.
+ | Soft zinc canvas, white surfaces, sky primary (no dark navy/teal clash).
  */
 @layer components {
     .fi-body {
-        @apply bg-slate-50 dark:bg-gray-950;
+        @apply bg-zinc-100 dark:bg-gray-950;
     }
 
     .fi-main {
@@ -20,56 +20,58 @@
     }
 
     .fi-sidebar {
-        @apply border-r border-slate-200/80 dark:border-white/5;
-        background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+        @apply border-r border-zinc-200/90 bg-white dark:border-white/10 dark:bg-gray-900;
     }
 
-    .fi-sidebar .fi-sidebar-header,
-    .fi-sidebar .fi-sidebar-nav,
-    .fi-sidebar .fi-sidebar-item-button,
-    .fi-sidebar .fi-sidebar-group-label,
-    .fi-sidebar .fi-sidebar-item-label,
-    .fi-sidebar .fi-icon-btn,
-    .fi-sidebar .fi-logo {
-        @apply text-slate-200;
+    .fi-sidebar .fi-sidebar-group-label {
+        @apply text-zinc-400;
+    }
+
+    .fi-sidebar .fi-sidebar-item-button {
+        @apply text-zinc-600 dark:text-zinc-300;
     }
 
     .fi-sidebar .fi-sidebar-item-button:hover {
-        @apply bg-white/5;
+        @apply bg-zinc-100 text-zinc-900 dark:bg-white/5 dark:text-white;
     }
 
     .fi-sidebar .fi-sidebar-item-button.fi-active {
-        @apply bg-teal-500/20 text-white;
+        @apply bg-sky-50 text-sky-800 dark:bg-sky-400/10 dark:text-sky-200;
     }
 
     .fi-topbar {
-        @apply border-b border-slate-200/80 bg-white/80 backdrop-blur dark:border-white/5 dark:bg-gray-900/80;
+        @apply border-b border-zinc-200/90 bg-white/90 backdrop-blur dark:border-white/10 dark:bg-gray-900/90;
     }
 
     .fi-header-heading {
-        @apply text-3xl font-bold tracking-tight text-slate-900 dark:text-white;
+        @apply text-3xl font-bold tracking-tight text-zinc-900 dark:text-white;
     }
 
     .fi-header-subheading {
-        @apply mt-1 text-sm text-slate-500 dark:text-slate-400;
+        @apply mt-1 text-sm text-zinc-500 dark:text-zinc-400;
     }
 
     .fi-section,
     .fi-wi-stats-overview-stat,
     .fi-wi-widget {
-        @apply shadow-sm shadow-slate-900/5;
+        @apply shadow-sm shadow-zinc-900/[0.03];
     }
 
     .fi-wi-stats-overview-stat {
-        @apply rounded-2xl border border-slate-200/80 bg-white dark:border-white/10 dark:bg-gray-900;
+        @apply rounded-2xl border border-zinc-200/90 bg-white dark:border-white/10 dark:bg-gray-900;
     }
 
     .fi-section {
-        @apply rounded-2xl border border-slate-200/80 dark:border-white/10;
+        @apply rounded-2xl border border-zinc-200/90 bg-white dark:border-white/10 dark:bg-gray-900;
     }
 
     .fi-simple-main,
     .fi-page {
         @apply gap-y-6;
+    }
+
+    .fi-btn-primary,
+    .fi-sidebar .fi-logo {
+        @apply font-semibold;
     }
 }
