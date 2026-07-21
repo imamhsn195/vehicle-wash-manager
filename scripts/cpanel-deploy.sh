@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Shared cPanel auto-deploy for Vehicle Wash Manager
-# Safe for cron: exits quickly when remote has no new commits.
+# Cron-safe: pulls when remote changed; always runs dump-autoload + migrate.
 #
 # Usage (from project root — same folder as artisan):
 #   chmod +x scripts/cpanel-deploy.sh
