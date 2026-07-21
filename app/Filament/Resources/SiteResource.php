@@ -23,6 +23,23 @@ class SiteResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessSites();
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (\App\Support\FilamentAccess::isAdmin() || \App\Support\FilamentAccess::isAccountant()) {
+            return $query;
+        }
+
+        return $query->whereIn('id', \App\Support\FilamentAccess::managedSiteIds() ?: [0]);
+    }
+
     public static function form(Form $form): Form
     {
         return $form

@@ -22,6 +22,23 @@ class DailyLogResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessDailyLogs();
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (\App\Support\FilamentAccess::isAdmin() || \App\Support\FilamentAccess::isAccountant()) {
+            return $query;
+        }
+
+        return $query->whereIn('site_id', \App\Support\FilamentAccess::managedSiteIds() ?: [0]);
+    }
+
     protected static ?string $navigationLabel = 'Daily Logs';
 
     public static function form(Form $form): Form

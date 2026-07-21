@@ -4,12 +4,12 @@ namespace App\Filament\Pages;
 
 use App\Enums\PaymentMethod;
 use App\Enums\Shift;
-use App\Enums\UserRole;
 use App\Exceptions\NoActiveServiceTypeException;
 use App\Models\ServiceType;
 use App\Models\Site;
 use App\Models\Staff;
 use App\Services\DailyLogService;
+use App\Support\FilamentAccess;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -33,14 +33,23 @@ class DailyLogEntry extends Page implements HasForms
 
     protected static ?int $navigationSort = 0;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessDailyLogEntry();
+    }
+
     public ?array $data = [];
 
     public function mount(): void
     {
         $user = auth()->user();
+        $sites = $this->getAvailableSites();
         $siteId = $user->isSiteManager()
-            ? $user->managedSites()->value('id')
-            : Site::query()->value('id');
+            ? ($user->managedSites()->value('id') ?? array_key_first($sites))
+            : (FilamentAccess::isStaff()
+                ? array_key_first($sites)
+                : (Site::query()->value('id') ?? array_key_first($sites)));
 
         $defaultServiceId = $siteId
             ? ServiceType::query()->where('site_id', $siteId)->where('is_active', true)->orderBy('id')->value('id')
@@ -142,13 +151,21 @@ class DailyLogEntry extends Page implements HasForms
 
     protected function getAvailableSites(): array
     {
-        $user = auth()->user();
-
-        if ($user?->role === UserRole::Admin || $user?->role === UserRole::Accountant) {
+        if (\App\Support\FilamentAccess::isAdmin() || \App\Support\FilamentAccess::isAccountant()) {
             return Site::query()->pluck('name', 'id')->all();
         }
 
-        return $user?->managedSites()->pluck('name', 'id')->all() ?? [];
+        if (\App\Support\FilamentAccess::isSiteManager()) {
+            return auth()->user()?->managedSites()->pluck('name', 'id')->all() ?? [];
+        }
+
+        if (\App\Support\FilamentAccess::isStaff()) {
+            $ids = \App\Support\FilamentAccess::staffSiteIds();
+
+            return Site::query()->whereIn('id', $ids ?: [0])->pluck('name', 'id')->all();
+        }
+
+        return [];
     }
 
     protected function getStaffForSite(?int $siteId): array

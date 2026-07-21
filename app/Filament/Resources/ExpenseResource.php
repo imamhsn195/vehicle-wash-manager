@@ -24,6 +24,23 @@ class ExpenseResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessExpenses();
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (\App\Support\FilamentAccess::isAdmin() || \App\Support\FilamentAccess::isAccountant()) {
+            return $query;
+        }
+
+        return $query->whereIn('site_id', \App\Support\FilamentAccess::managedSiteIds() ?: [0]);
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -76,13 +93,13 @@ class ExpenseResource extends Resource
                     ->icon('heroicon-o-check')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->visible(fn (Expense $record) => $record->isPending() && auth()->user()?->isAdmin())
+                    ->visible(fn (Expense $record) => $record->isPending() && \App\Support\FilamentAccess::canApproveExpenses())
                     ->action(fn (Expense $record) => app(ExpenseService::class)->approve($record, auth()->user())),
                 Tables\Actions\Action::make('reject')
                     ->icon('heroicon-o-x-mark')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->visible(fn (Expense $record) => $record->isPending() && auth()->user()?->isAdmin())
+                    ->visible(fn (Expense $record) => $record->isPending() && \App\Support\FilamentAccess::canApproveExpenses())
                     ->action(fn (Expense $record) => app(ExpenseService::class)->reject($record, auth()->user())),
             ]);
     }

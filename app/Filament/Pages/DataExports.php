@@ -21,6 +21,12 @@ class DataExports extends Page
 
     protected static ?int $navigationSort = 5;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessExports();
+    }
+
     protected function getHeaderActions(): array
     {
         return [

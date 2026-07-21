@@ -31,7 +31,7 @@ class CurrencySettings extends Page implements HasForms
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->isAdmin() ?? false;
+        return \App\Support\FilamentAccess::canAccessCurrency();
     }
 
     public function mount(): void

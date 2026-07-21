@@ -21,6 +21,25 @@ class StaffResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessStaff();
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (\App\Support\FilamentAccess::isAdmin() || \App\Support\FilamentAccess::isAccountant()) {
+            return $query;
+        }
+
+        $siteIds = \App\Support\FilamentAccess::managedSiteIds();
+
+        return $query->whereHas('assignments', fn ($q) => $q->whereIn('site_id', $siteIds ?: [0]));
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -50,6 +69,7 @@ class StaffResource extends Resource
                         Forms\Components\Toggle::make('is_active')->default(true),
                     ])->columns(2),
                 Forms\Components\Section::make('Pay & Benefits')
+                    ->visible(fn () => \App\Support\FilamentAccess::canEditPayFields())
                     ->schema([
                         Forms\Components\Select::make('salary_type')
                             ->options([

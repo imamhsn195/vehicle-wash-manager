@@ -26,6 +26,12 @@ class PartnerPayoutReport extends Page implements HasForms
 
     protected static ?int $navigationSort = 0;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessPartnerPayouts();
+    }
+
     public ?array $data = [];
 
     public array $results = [];
@@ -63,8 +69,14 @@ class PartnerPayoutReport extends Page implements HasForms
         $month = (int) ($this->data['month'] ?? now()->month);
         $service = app(PartnerPayoutService::class);
 
-        $this->results = Partner::query()
-            ->where('is_active', true)
+        $query = Partner::query()->where('is_active', true);
+
+        if (\App\Support\FilamentAccess::isPartner()) {
+            $partnerId = auth()->user()?->partnerProfile?->id;
+            $query->where('id', $partnerId ?? 0);
+        }
+
+        $this->results = $query
             ->get()
             ->map(function (Partner $partner) use ($service, $year, $month) {
                 $breakdown = $service->breakdown($partner, $year, $month);

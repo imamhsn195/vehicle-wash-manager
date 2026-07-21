@@ -22,6 +22,40 @@ class PartnerResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessPartners();
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (\App\Support\FilamentAccess::isAdmin() || \App\Support\FilamentAccess::isAccountant()) {
+            return $query;
+        }
+
+        $partnerId = auth()->user()?->partnerProfile?->id;
+
+        return $query->where('id', $partnerId ?? 0);
+    }
+
+    public static function canCreate(): bool
+    {
+        return \App\Support\FilamentAccess::isAdmin() || \App\Support\FilamentAccess::isAccountant();
+    }
+
+    public static function canEdit($record): bool
+    {
+        return \App\Support\FilamentAccess::isAdmin() || \App\Support\FilamentAccess::isAccountant();
+    }
+
+    public static function canDelete($record): bool
+    {
+        return \App\Support\FilamentAccess::isAdmin();
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([

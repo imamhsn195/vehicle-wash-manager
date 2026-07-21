@@ -26,6 +26,12 @@ class SitePnLReport extends Page implements HasForms
 
     protected static ?int $navigationSort = 0;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessFinanceReports();
+    }
+
     public ?array $data = [];
 
     public array $results = [];

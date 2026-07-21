@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
     {
         $org = Organization::create(['name' => 'Premium Car Wash Co.', 'currency_code' => 'BDT']);
 
-        $admin = User::create([
+        $admin = User::forceCreate([
             'organization_id' => $org->id,
             'name' => 'Admin Owner',
             'email' => 'admin@carwash.test',
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        User::create([
+        User::forceCreate([
             'organization_id' => $org->id,
             'name' => 'Accountant',
             'email' => 'accountant@carwash.test',
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Rahim Uddin', 'email' => 'rahim@carwash.test'],
             ['name' => 'Hasan Ali', 'email' => 'hasan@carwash.test'],
             ['name' => 'Faruk Chowdhury', 'email' => 'faruk@carwash.test'],
-        ])->map(fn (array $data) => User::create([
+        ])->map(fn (array $data) => User::forceCreate([
             'organization_id' => $org->id,
             'name' => $data['name'],
             'email' => $data['email'],
@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
         $partnerUsers = collect([
             ['name' => 'Partner One', 'email' => 'partner1@carwash.test'],
             ['name' => 'Partner Two', 'email' => 'partner2@carwash.test'],
-        ])->map(fn (array $data) => User::create([
+        ])->map(fn (array $data) => User::forceCreate([
             'organization_id' => $org->id,
             'name' => $data['name'],
             'email' => $data['email'],
@@ -211,7 +211,7 @@ class DatabaseSeeder extends Seeder
         PartnerSiteShare::create(['partner_id' => $partner2->id, 'site_id' => $sites[3]->id, 'share_pct' => 35]);
 
         for ($i = 5; $i >= 1; $i--) {
-            $staffUser = User::create([
+            $staffUser = User::forceCreate([
                 'organization_id' => $org->id,
                 'name' => 'Staff Demo '.$i,
                 'email' => 'staff'.$i.'@carwash.test',

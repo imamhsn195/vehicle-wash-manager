@@ -25,6 +25,12 @@ class BreakEvenAnalysis extends Page implements HasForms
 
     protected static ?int $navigationSort = 4;
 
+
+    public static function canAccess(): bool
+    {
+        return \App\Support\FilamentAccess::canAccessFinanceReports();
+    }
+
     public ?array $data = [];
 
     public array $results = [];
