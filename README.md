@@ -95,18 +95,18 @@ See [docs/TDD.md](docs/TDD.md) for the test-driven development workflow.
 
 ## cPanel deploy (vehiclewash.cpanel.site)
 
-See **[deploy/cpanel/README.md](deploy/cpanel/README.md)** for full checklist.
+Full recipe: **[docs/CPANEL_DEPLOY_RECIPE.md](docs/CPANEL_DEPLOY_RECIPE.md)**
 
 ```bash
-# First time
-git clone https://github.com/imamhsn195/vehicle-wash-manager.git
-cd vehicle-wash-manager
-chmod +x deploy/cpanel/*.sh
-./deploy/cpanel/setup-first.sh   # creates .env — edit DB/URL, re-run
+cd ~/vehicle-wash-manager
+chmod +x scripts/cpanel-deploy.sh
+cp .env.deploy.example .env.deploy
+cp deploy/cpanel/.env.cpanel.example .env   # first time — edit DB/URL
+./deploy/cpanel/setup-first.sh             # first time
+bash scripts/cpanel-deploy.sh              # test once
 
-# Point domain document root → .../vehicle-wash-manager/public
-# Add cron from deploy/cpanel/cron.txt
-
-# Every update
-./deploy/cpanel/pull-and-deploy.sh
+# Cron every 5 min:
+# cd /home/USER/vehicle-wash-manager && /bin/bash scripts/cpanel-deploy.sh >/dev/null 2>&1
 ```
+
+Document root → `public/`. Logs → `storage/logs/cpanel-deploy/YYYY-MM-DD/deploy.log`
