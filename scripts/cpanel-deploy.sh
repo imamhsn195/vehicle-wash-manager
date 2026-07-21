@@ -12,6 +12,16 @@ set -euo pipefail
 APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$APP_DIR"
 
+# Preserve CLI/cron overrides so .env.deploy cannot clobber them
+# (e.g. DEPLOY_FORCE=1 bash scripts/cpanel-deploy.sh)
+_CLI_DEPLOY_BRANCH="${DEPLOY_BRANCH-}"
+_CLI_DEPLOY_PHP="${DEPLOY_PHP-}"
+_CLI_DEPLOY_RUN_SEEDER="${DEPLOY_RUN_SEEDER-}"
+_CLI_DEPLOY_REMOTE="${DEPLOY_REMOTE-}"
+_CLI_DEPLOY_FORCE="${DEPLOY_FORCE-}"
+_CLI_DEPLOY_COMPOSER="${DEPLOY_COMPOSER-}"
+_CLI_DEPLOY_LOG_KEEP_DAYS="${DEPLOY_LOG_KEEP_DAYS-}"
+
 # ---------------------------------------------------------------------------
 # Load optional .env.deploy (KEY=VALUE, no export needed)
 # ---------------------------------------------------------------------------
@@ -23,7 +33,15 @@ if [ -f "$APP_DIR/.env.deploy" ]; then
   set +a
 fi
 
-DEPLOY_BRANCH="${DEPLOY_BRANCH:-cursor/vehicle-wash-phase1-7c7f}"
+[ -n "$_CLI_DEPLOY_BRANCH" ] && DEPLOY_BRANCH="$_CLI_DEPLOY_BRANCH"
+[ -n "$_CLI_DEPLOY_PHP" ] && DEPLOY_PHP="$_CLI_DEPLOY_PHP"
+[ -n "$_CLI_DEPLOY_RUN_SEEDER" ] && DEPLOY_RUN_SEEDER="$_CLI_DEPLOY_RUN_SEEDER"
+[ -n "$_CLI_DEPLOY_REMOTE" ] && DEPLOY_REMOTE="$_CLI_DEPLOY_REMOTE"
+[ -n "$_CLI_DEPLOY_FORCE" ] && DEPLOY_FORCE="$_CLI_DEPLOY_FORCE"
+[ -n "$_CLI_DEPLOY_COMPOSER" ] && DEPLOY_COMPOSER="$_CLI_DEPLOY_COMPOSER"
+[ -n "$_CLI_DEPLOY_LOG_KEEP_DAYS" ] && DEPLOY_LOG_KEEP_DAYS="$_CLI_DEPLOY_LOG_KEEP_DAYS"
+
+DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
 DEPLOY_PHP="${DEPLOY_PHP:-php}"
 DEPLOY_RUN_SEEDER="${DEPLOY_RUN_SEEDER:-0}"
 DEPLOY_REMOTE="${DEPLOY_REMOTE:-origin}"
