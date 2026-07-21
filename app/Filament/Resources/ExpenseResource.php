@@ -38,7 +38,7 @@ class ExpenseResource extends Resource
                 ->options(collect(ExpenseCategory::cases())->mapWithKeys(fn ($c) => [$c->value => $c->label()]))
                 ->required(),
             Forms\Components\TextInput::make('description')->required()->columnSpanFull(),
-            Forms\Components\TextInput::make('amount')->numeric()->required()->prefix('৳'),
+            Forms\Components\TextInput::make('amount')->numeric()->required()->prefix(fn () => currency_symbol()),
             Forms\Components\DatePicker::make('date')->required()->default(now()),
         ]);
     }
@@ -53,7 +53,7 @@ class ExpenseResource extends Resource
                     ->formatStateUsing(fn ($state) => $state instanceof ExpenseCategory ? $state->label() : $state)
                     ->badge(),
                 Tables\Columns\TextColumn::make('description')->limit(30),
-                Tables\Columns\TextColumn::make('amount')->money('BDT'),
+                Tables\Columns\TextColumn::make('amount')->money(fn () => currency_code()),
                 Tables\Columns\TextColumn::make('type')
                     ->formatStateUsing(fn ($state) => $state instanceof ExpenseType ? $state->label() : $state),
                 Tables\Columns\BadgeColumn::make('status')

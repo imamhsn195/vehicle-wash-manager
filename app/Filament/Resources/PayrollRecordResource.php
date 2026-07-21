@@ -33,10 +33,10 @@ class PayrollRecordResource extends Resource
                 ->preload(),
             Forms\Components\DatePicker::make('period_start')->required(),
             Forms\Components\DatePicker::make('period_end')->required(),
-            Forms\Components\TextInput::make('base_amount')->numeric()->prefix('৳'),
-            Forms\Components\TextInput::make('wash_bonus')->numeric()->prefix('৳'),
-            Forms\Components\TextInput::make('deductions')->numeric()->prefix('৳'),
-            Forms\Components\TextInput::make('net_amount')->numeric()->prefix('৳')->required(),
+            Forms\Components\TextInput::make('base_amount')->numeric()->prefix(fn () => currency_symbol()),
+            Forms\Components\TextInput::make('wash_bonus')->numeric()->prefix(fn () => currency_symbol()),
+            Forms\Components\TextInput::make('deductions')->numeric()->prefix(fn () => currency_symbol()),
+            Forms\Components\TextInput::make('net_amount')->numeric()->prefix(fn () => currency_symbol())->required(),
             Forms\Components\Textarea::make('notes')->columnSpanFull(),
         ]);
     }
@@ -51,9 +51,9 @@ class PayrollRecordResource extends Resource
                 Tables\Columns\TextColumn::make('period_end')->date(),
                 Tables\Columns\TextColumn::make('days_worked'),
                 Tables\Columns\TextColumn::make('cars_washed'),
-                Tables\Columns\TextColumn::make('base_amount')->money('BDT'),
-                Tables\Columns\TextColumn::make('wash_bonus')->money('BDT'),
-                Tables\Columns\TextColumn::make('net_amount')->money('BDT')->weight('bold'),
+                Tables\Columns\TextColumn::make('base_amount')->money(fn () => currency_code()),
+                Tables\Columns\TextColumn::make('wash_bonus')->money(fn () => currency_code()),
+                Tables\Columns\TextColumn::make('net_amount')->money(fn () => currency_code())->weight('bold'),
                 Tables\Columns\IconColumn::make('paid_at')
                     ->label('Paid')
                     ->boolean()

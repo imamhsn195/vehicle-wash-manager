@@ -41,5 +41,12 @@
     "Exports": "एक्सपोर्ट",
     "Download Excel Reports": "एक्सेल रिपोर्ट डाउनलोड",
     "Save": "सहेजें",
-    "Language updated": "भाषा अपडेट हुई"
+    "Language updated": "भाषा अपडेट हुई",
+    "Business currency": "व्यवसाय मुद्रा",
+    "Used for prices, payroll, expenses, and reports across the app.": "कीमतों, पेरोल, खर्चों और रिपोर्ट्स के लिए उपयोग होती है।",
+    "Currency": "मुद्रा",
+    "Currency updated": "मुद्रा अपडेट हुई",
+    "Preview": "पूर्वावलोकन",
+    "No organization found": "कोई संगठन नहीं मिला",
+    "Settlement created": "सेटलमेंट बनाया गया"
 }

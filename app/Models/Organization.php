@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Organization extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'currency_code',
+    ];
 
     public function users(): HasMany
     {

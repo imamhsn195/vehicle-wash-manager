@@ -18,9 +18,9 @@
         </x-filament::section>
 
         <x-filament::section heading="{{ __('Est. Earnings Today') }}">
-            <div class="text-3xl font-bold text-success-600">৳{{ number_format($this->stats['estimated_earnings_today'], 0) }}</div>
+            <div class="text-3xl font-bold text-success-600">{{ money_format_app($this->stats['estimated_earnings_today']) }}</div>
             <div class="mt-1 text-sm text-gray-500">
-                {{ __('This month') }}: ৳{{ number_format($this->stats['estimated_earnings_month'], 0) }}
+                {{ __('This month') }}: {{ money_format_app($this->stats['estimated_earnings_month']) }}
             </div>
         </x-filament::section>
     </div>

@@ -41,5 +41,12 @@
     "Exports": "تصدير",
     "Download Excel Reports": "تحميل تقارير إكسل",
     "Save": "حفظ",
-    "Language updated": "تم تحديث اللغة"
+    "Language updated": "تم تحديث اللغة",
+    "Business currency": "عملة العمل",
+    "Used for prices, payroll, expenses, and reports across the app.": "تُستخدم للأسعار والرواتب والمصروفات والتقارير في التطبيق.",
+    "Currency": "العملة",
+    "Currency updated": "تم تحديث العملة",
+    "Preview": "معاينة",
+    "No organization found": "لم يتم العثور على مؤسسة",
+    "Settlement created": "تم إنشاء التسوية"
 }

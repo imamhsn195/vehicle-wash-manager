@@ -31,7 +31,7 @@ class EquipmentResource extends Resource
             Forms\Components\TextInput::make('name')->required(),
             Forms\Components\TextInput::make('serial_number'),
             Forms\Components\DatePicker::make('purchase_date'),
-            Forms\Components\TextInput::make('purchase_cost')->numeric()->prefix('৳'),
+            Forms\Components\TextInput::make('purchase_cost')->numeric()->prefix(fn () => currency_symbol()),
             Forms\Components\DatePicker::make('warranty_end'),
             Forms\Components\Select::make('status')
                 ->options([
@@ -51,7 +51,7 @@ class EquipmentResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('site.name'),
-                Tables\Columns\TextColumn::make('purchase_cost')->money('BDT'),
+                Tables\Columns\TextColumn::make('purchase_cost')->money(fn () => currency_code()),
                 Tables\Columns\TextColumn::make('purchase_date')->date(),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([

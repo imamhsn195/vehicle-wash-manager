@@ -14,7 +14,7 @@
                         <tr class="border-b border-gray-100 dark:border-gray-800">
                             <td class="px-3 py-2 font-medium">{{ $site['site_name'] }}</td>
                             <td class="px-3 py-2 text-right">{{ number_format($site['cars']) }}</td>
-                            <td class="px-3 py-2 text-right font-semibold text-primary-600">৳{{ number_format($site['revenue'], 0) }}</td>
+                            <td class="px-3 py-2 text-right font-semibold text-primary-600">{{ money_format_app($site['revenue']) }}</td>
                         </tr>
                     @empty
                         <tr>

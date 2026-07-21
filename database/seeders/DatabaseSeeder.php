@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $org = Organization::create(['name' => 'Premium Car Wash Co.']);
+        $org = Organization::create(['name' => 'Premium Car Wash Co.', 'currency_code' => 'BDT']);
 
         $admin = User::create([
             'organization_id' => $org->id,

@@ -2,12 +2,12 @@
 # Daily Wash Summary — {{ $summary['date'] }}
 
 **Total cars:** {{ number_format($summary['total_cars']) }}  
-**Total revenue:** ৳{{ number_format($summary['total_revenue'], 0) }}
+**Total revenue:** {{ money_format_app($summary['total_revenue']) }}
 
 ## By Site
 
 @foreach ($summary['by_site'] as $site)
-- **{{ $site['site_name'] }}** — {{ $site['cars'] }} cars · ৳{{ number_format($site['revenue'], 0) }}
+- **{{ $site['site_name'] }}** — {{ $site['cars'] }} cars · {{ money_format_app($site['revenue']) }}
 @endforeach
 
 @if (count($summary['missing_sites'] ?? []) > 0)

@@ -19,7 +19,7 @@ class ContractsRelationManager extends RelationManager
             Forms\Components\TextInput::make('annual_value')
                 ->required()
                 ->numeric()
-                ->prefix('৳'),
+                ->prefix(fn () => currency_symbol()),
             Forms\Components\DatePicker::make('start_date')->required(),
             Forms\Components\DatePicker::make('end_date')->required(),
             Forms\Components\Select::make('status')
@@ -37,7 +37,7 @@ class ContractsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('annual_value')->money('BDT'),
+                Tables\Columns\TextColumn::make('annual_value')->money(fn () => currency_code()),
                 Tables\Columns\TextColumn::make('end_date')->date(),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([

@@ -42,7 +42,7 @@ class CashReconciliationResource extends Resource
                     $siteId = $get('site_id');
                     $date = $get('date');
                     if (! $siteId || ! $date) {
-                        return '৳0';
+                        return money_format_app(0);
                     }
 
                     $expected = app(CashReconciliationService::class)->expectedRevenue(
@@ -50,16 +50,16 @@ class CashReconciliationResource extends Resource
                         \Illuminate\Support\Carbon::parse($date)->toDateString()
                     );
 
-                    return '৳'.number_format($expected, 0);
+                    return money_format_app($expected);
                 }),
             Forms\Components\TextInput::make('cash_collected')
                 ->numeric()
                 ->required()
-                ->prefix('৳'),
+                ->prefix(fn () => currency_symbol()),
             Forms\Components\TextInput::make('deposited_amount')
                 ->numeric()
                 ->required()
-                ->prefix('৳'),
+                ->prefix(fn () => currency_symbol()),
             Forms\Components\Toggle::make('is_deposited')->default(true),
             Forms\Components\Textarea::make('notes')->columnSpanFull(),
         ]);
@@ -71,13 +71,13 @@ class CashReconciliationResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('date')->date()->sortable(),
                 Tables\Columns\TextColumn::make('site.name'),
-                Tables\Columns\TextColumn::make('expected_revenue')->money('BDT'),
-                Tables\Columns\TextColumn::make('cash_collected')->money('BDT'),
-                Tables\Columns\TextColumn::make('deposited_amount')->money('BDT'),
+                Tables\Columns\TextColumn::make('expected_revenue')->money(fn () => currency_code()),
+                Tables\Columns\TextColumn::make('cash_collected')->money(fn () => currency_code()),
+                Tables\Columns\TextColumn::make('deposited_amount')->money(fn () => currency_code()),
                 Tables\Columns\TextColumn::make('difference')
                     ->label('Difference')
                     ->getStateUsing(fn (CashReconciliation $record) => $record->difference())
-                    ->money('BDT')
+                    ->money(fn () => currency_code())
                     ->color(fn (CashReconciliation $record) => $record->hasDiscrepancy() ? 'danger' : 'success'),
                 Tables\Columns\IconColumn::make('is_deposited')->boolean(),
             ])

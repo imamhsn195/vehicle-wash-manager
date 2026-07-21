@@ -30,7 +30,7 @@ class SettlementsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('period_start')->date(),
                 Tables\Columns\TextColumn::make('period_end')->date(),
-                Tables\Columns\TextColumn::make('amount')->money('BDT'),
+                Tables\Columns\TextColumn::make('amount')->money(fn () => currency_code()),
                 Tables\Columns\IconColumn::make('paid_at')
                     ->label('Paid')
                     ->boolean()
@@ -50,7 +50,7 @@ class SettlementsRelationManager extends RelationManager
                         );
 
                         Notification::make()
-                            ->title('Settlement created: ৳'.number_format($settlement->amount, 0))
+                            ->title(__('Settlement created').': '.money_format_app($settlement->amount))
                             ->success()
                             ->send();
                     }),

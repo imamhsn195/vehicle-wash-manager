@@ -11,7 +11,7 @@
                     'text-success-600' => $row['total'] >= 0,
                     'text-danger-600' => $row['total'] < 0,
                 ])>
-                    ৳{{ number_format($row['total'], 0) }}
+                    {{ money_format_app($row['total']) }}
                 </span>
             </div>
 
@@ -30,8 +30,8 @@
                             <tr class="border-b border-gray-100 dark:border-gray-800">
                                 <td class="px-3 py-2">{{ $line['site_name'] }}</td>
                                 <td class="px-3 py-2 text-right">{{ number_format($line['share_pct'], 1) }}%</td>
-                                <td class="px-3 py-2 text-right">৳{{ number_format($line['profit'], 0) }}</td>
-                                <td class="px-3 py-2 text-right font-semibold">৳{{ number_format($line['payout'], 0) }}</td>
+                                <td class="px-3 py-2 text-right">{{ money_format_app($line['profit']) }}</td>
+                                <td class="px-3 py-2 text-right font-semibold">{{ money_format_app($line['payout']) }}</td>
                             </tr>
                         @empty
                             <tr>

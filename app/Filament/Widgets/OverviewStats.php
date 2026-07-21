@@ -19,7 +19,7 @@ class OverviewStats extends BaseWidget
                 ->description(__('Across all sites'))
                 ->descriptionIcon('heroicon-m-truck')
                 ->color('success'),
-            Stat::make(__('Revenue Today'), '৳'.number_format($analytics->revenueToday(), 0))
+            Stat::make(__('Revenue Today'), money_format_app($analytics->revenueToday()))
                 ->description(__('From wash logs'))
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),

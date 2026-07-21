@@ -176,7 +176,7 @@ class DailyLogEntry extends Page implements HasForms
             ->orderBy('name')
             ->get()
             ->mapWithKeys(fn (ServiceType $service) => [
-                $service->id => sprintf('%s (৳%s)', $service->name, number_format((float) $service->price, 0)),
+                $service->id => sprintf('%s (%s)', $service->name, money_format_app($service->price)),
             ])
             ->all();
     }

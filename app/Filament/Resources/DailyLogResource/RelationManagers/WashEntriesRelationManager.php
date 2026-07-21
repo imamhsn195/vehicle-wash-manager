@@ -55,7 +55,7 @@ class WashEntriesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('vehicle_count')->label('Cars'),
                 Tables\Columns\TextColumn::make('serviceType.price')
                     ->label('Unit Price')
-                    ->money('BDT'),
+                    ->money(fn () => currency_code()),
                 Tables\Columns\TextColumn::make('payment_method')->badge(),
             ])
             ->headerActions([

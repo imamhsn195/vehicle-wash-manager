@@ -21,7 +21,7 @@ class ServiceTypesRelationManager extends RelationManager
             Forms\Components\TextInput::make('price')
                 ->required()
                 ->numeric()
-                ->prefix('৳'),
+                ->prefix(fn () => currency_symbol()),
             Forms\Components\Toggle::make('is_active')
                 ->default(true),
         ]);
@@ -32,7 +32,7 @@ class ServiceTypesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('price')->money('BDT'),
+                Tables\Columns\TextColumn::make('price')->money(fn () => currency_code()),
                 Tables\Columns\IconColumn::make('is_active')->boolean(),
             ])
             ->headerActions([

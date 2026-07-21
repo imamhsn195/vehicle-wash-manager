@@ -67,12 +67,7 @@ class SiteResource extends Resource
                 Tables\Columns\TextColumn::make('services_summary')
                     ->label('Services & Prices')
                     ->getStateUsing(fn (Site $record) => $record->serviceTypes
-                        ->map(fn ($service) => sprintf(
-                            '%s — ৳%s%s',
-                            $service->name,
-                            number_format((float) $service->price, 0),
-                            $service->is_active ? '' : ' (inactive)'
-                        ))
+                        ->map(fn ($service) => sprintf('%s — %s%s', $service->name, money_format_app($service->price), $service->is_active ? '' : ' (inactive)'))
                         ->values()
                         ->all())
                     ->listWithLineBreaks()

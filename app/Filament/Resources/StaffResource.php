@@ -59,12 +59,12 @@ class StaffResource extends Resource
                                 'hybrid' => 'Hybrid',
                             ])
                             ->required(),
-                        Forms\Components\TextInput::make('base_salary')->numeric()->prefix('৳'),
-                        Forms\Components\TextInput::make('per_wash_rate')->numeric()->prefix('৳'),
+                        Forms\Components\TextInput::make('base_salary')->numeric()->prefix(fn () => currency_symbol()),
+                        Forms\Components\TextInput::make('per_wash_rate')->numeric()->prefix(fn () => currency_symbol()),
                         Forms\Components\Toggle::make('has_housing')->default(true),
                         Forms\Components\TextInput::make('daily_food_allowance')
                             ->numeric()
-                            ->prefix('৳')
+                            ->prefix(fn () => currency_symbol())
                             ->default(100),
                     ])->columns(2),
             ]);

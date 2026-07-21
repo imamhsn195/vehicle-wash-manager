@@ -28,7 +28,7 @@ trait SetsUpWashBusiness
 
     protected function setUpWashBusiness(): void
     {
-        $this->organization = Organization::create(['name' => 'Test Wash Co.']);
+        $this->organization = Organization::create(['name' => 'Test Wash Co.', 'currency_code' => 'BDT']);
 
         $this->admin = User::factory()->create([
             'organization_id' => $this->organization->id,

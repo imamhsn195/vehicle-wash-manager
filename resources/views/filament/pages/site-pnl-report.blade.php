@@ -22,17 +22,17 @@
                         <tr class="border-b border-gray-100 dark:border-gray-800">
                             <td class="px-3 py-2 font-medium">{{ $row['site'] }}</td>
                             <td class="px-3 py-2 text-right">{{ number_format($row['cars']) }}</td>
-                            <td class="px-3 py-2 text-right">৳{{ number_format($row['revenue'], 0) }}</td>
-                            <td class="px-3 py-2 text-right">৳{{ number_format($row['expenses'], 0) }}</td>
+                            <td class="px-3 py-2 text-right">{{ money_format_app($row['revenue']) }}</td>
+                            <td class="px-3 py-2 text-right">{{ money_format_app($row['expenses']) }}</td>
                             <td @class([
                                 'px-3 py-2 text-right font-semibold',
                                 'text-success-600' => $row['profit'] >= 0,
                                 'text-danger-600' => $row['profit'] < 0,
                             ])>
-                                ৳{{ number_format($row['profit'], 0) }}
+                                {{ money_format_app($row['profit']) }}
                             </td>
                             <td class="px-3 py-2 text-right">{{ number_format($row['margin_pct'], 1) }}%</td>
-                            <td class="px-3 py-2 text-right">৳{{ number_format($row['cost_per_wash'], 0) }}</td>
+                            <td class="px-3 py-2 text-right">{{ money_format_app($row['cost_per_wash']) }}</td>
                         </tr>
                     @empty
                         <tr>

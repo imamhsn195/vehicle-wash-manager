@@ -20,8 +20,8 @@
                     @forelse ($this->results as $row)
                         <tr class="border-b border-gray-100 dark:border-gray-800">
                             <td class="px-3 py-2 font-medium">{{ $row['site'] }}</td>
-                            <td class="px-3 py-2 text-right">৳{{ number_format($row['avg_price'], 0) }}</td>
-                            <td class="px-3 py-2 text-right">৳{{ number_format($row['daily_fixed_cost'], 0) }}</td>
+                            <td class="px-3 py-2 text-right">{{ money_format_app($row['avg_price']) }}</td>
+                            <td class="px-3 py-2 text-right">{{ money_format_app($row['daily_fixed_cost']) }}</td>
                             <td class="px-3 py-2 text-right font-semibold">
                                 {{ $row['break_even_cars'] ?? '∞' }}
                             </td>
