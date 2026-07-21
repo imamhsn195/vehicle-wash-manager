@@ -49,11 +49,34 @@ class DailyLogResource extends Resource
                     ->relationship('site', 'name')
                     ->required()
                     ->searchable()
-                    ->preload(),
-                Forms\Components\DatePicker::make('date')->required()->default(now()),
+                    ->preload()
+                    ->live()
+                    ->rules([
+                        fn (Forms\Get $get, ?DailyLog $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                            if (! $value || ! $get('date') || ! $get('shift')) {
+                                return;
+                            }
+
+                            $exists = DailyLog::query()
+                                ->where('site_id', $value)
+                                ->whereDate('date', \Illuminate\Support\Carbon::parse($get('date'))->toDateString())
+                                ->where('shift', $get('shift'))
+                                ->when($record, fn ($query) => $query->whereKeyNot($record->getKey()))
+                                ->exists();
+
+                            if ($exists) {
+                                $fail(__('A daily log already exists for this site, date, and shift.'));
+                            }
+                        },
+                    ]),
+                Forms\Components\DatePicker::make('date')
+                    ->required()
+                    ->default(now())
+                    ->live(),
                 Forms\Components\Select::make('shift')
                     ->options(collect(Shift::cases())->mapWithKeys(fn ($s) => [$s->value => $s->label()]))
-                    ->required(),
+                    ->required()
+                    ->live(),
                 Forms\Components\Textarea::make('notes')->columnSpanFull(),
                 Forms\Components\Toggle::make('is_closed')->default(false),
             ]);

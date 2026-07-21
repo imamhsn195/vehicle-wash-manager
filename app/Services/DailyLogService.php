@@ -8,6 +8,7 @@ use App\Models\DailyLog;
 use App\Models\ServiceType;
 use App\Models\User;
 use App\Models\WashEntry;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Carbon;
 
 class DailyLogService
@@ -36,21 +37,12 @@ class DailyLogService
 
         $date = Carbon::parse($data['date'])->toDateString();
 
-        $dailyLog = DailyLog::query()
-            ->where('site_id', $data['site_id'])
-            ->where('shift', $shift)
-            ->whereDate('date', $date)
-            ->first();
-
-        if (! $dailyLog) {
-            $dailyLog = DailyLog::create([
-                'site_id' => $data['site_id'],
-                'date' => $date,
-                'shift' => $shift,
-                'submitted_by_id' => $submitter->id,
-                'is_closed' => false,
-            ]);
-        }
+        $dailyLog = $this->findOrCreateDailyLog(
+            siteId: (int) $data['site_id'],
+            date: $date,
+            shift: $shift,
+            submitterId: $submitter->id,
+        );
 
         return WashEntry::create([
             'daily_log_id' => $dailyLog->id,
@@ -59,6 +51,35 @@ class DailyLogService
             'vehicle_count' => $data['vehicle_count'],
             'payment_method' => $data['payment_method'],
         ]);
+    }
+
+    public function findOrCreateDailyLog(int $siteId, string $date, string $shift, int $submitterId): DailyLog
+    {
+        $dailyLog = DailyLog::query()
+            ->where('site_id', $siteId)
+            ->where('shift', $shift)
+            ->whereDate('date', $date)
+            ->first();
+
+        if ($dailyLog) {
+            return $dailyLog;
+        }
+
+        try {
+            return DailyLog::create([
+                'site_id' => $siteId,
+                'date' => $date,
+                'shift' => $shift,
+                'submitted_by_id' => $submitterId,
+                'is_closed' => false,
+            ]);
+        } catch (UniqueConstraintViolationException) {
+            return DailyLog::query()
+                ->where('site_id', $siteId)
+                ->where('shift', $shift)
+                ->whereDate('date', $date)
+                ->firstOrFail();
+        }
     }
 
     public function findActiveServiceType(int $siteId): ?ServiceType
