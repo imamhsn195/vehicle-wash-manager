@@ -23,7 +23,12 @@ class AnalyticsService
 
     public function revenueBySiteToday(): Collection
     {
-        return $this->washEntriesQuery(today())
+        return $this->revenueBySiteOnDate(today());
+    }
+
+    public function revenueBySiteOnDate(Carbon $date): Collection
+    {
+        return $this->washEntriesQuery($date)
             ->join('daily_logs', 'wash_entries.daily_log_id', '=', 'daily_logs.id')
             ->join('sites', 'daily_logs.site_id', '=', 'sites.id')
             ->join('service_types', 'wash_entries.service_type_id', '=', 'service_types.id')
