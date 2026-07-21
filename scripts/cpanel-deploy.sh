@@ -145,7 +145,17 @@ log "local=$LOCAL_SHA"
 log "remote=$REMOTE_SHA"
 
 if [ "$LOCAL_SHA" = "$REMOTE_SHA" ] && [ "$DEPLOY_FORCE" != "1" ]; then
-  log "No new commits — nothing to deploy."
+  # Still apply any pending migrations (e.g. code was pulled by hand earlier)
+  PENDING="$("$DEPLOY_PHP" artisan migrate:status 2>/dev/null | grep -c 'Pending' || true)"
+  if [ "${PENDING:-0}" -gt 0 ]; then
+    log "No new commits, but $PENDING pending migration(s) — applying"
+    "$DEPLOY_PHP" artisan migrate --force 2>&1 | tee -a "$LOG_FILE" \
+      || fail "migrate failed"
+    "$DEPLOY_PHP" artisan config:cache >>"$LOG_FILE" 2>&1 || true
+    log "Pending migrations applied."
+  else
+    log "No new commits — nothing to deploy."
+  fi
   log "======== cpanel-deploy end (noop) ========"
   exit 0
 fi
@@ -168,6 +178,9 @@ log "Maintenance mode ON"
 log "composer install --no-dev"
 "${COMPOSER_CMD[@]}" install --no-dev --optimize-autoloader --no-interaction 2>&1 | tee -a "$LOG_FILE" \
   || { "$DEPLOY_PHP" artisan up >>"$LOG_FILE" 2>&1 || true; fail "composer install failed"; }
+
+log "composer dump-autoload -o"
+"${COMPOSER_CMD[@]}" dump-autoload -o --no-interaction 2>&1 | tee -a "$LOG_FILE" || true
 
 log "migrate --force"
 "$DEPLOY_PHP" artisan migrate --force 2>&1 | tee -a "$LOG_FILE" \
