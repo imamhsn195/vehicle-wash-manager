@@ -211,7 +211,7 @@ class DatabaseSeeder extends Seeder
         PartnerSiteShare::create(['partner_id' => $partner2->id, 'site_id' => $sites[3]->id, 'share_pct' => 35]);
 
         for ($i = 5; $i >= 1; $i--) {
-            User::create([
+            $staffUser = User::create([
                 'organization_id' => $org->id,
                 'name' => 'Staff Demo '.$i,
                 'email' => 'staff'.$i.'@carwash.test',
@@ -219,6 +219,18 @@ class DatabaseSeeder extends Seeder
                 'role' => UserRole::Staff,
                 'is_active' => true,
             ]);
+
+            // Link first 5 washers across sites to demo staff users
+            $washer = Staff::query()
+                ->where('organization_id', $org->id)
+                ->where('staff_type', 'washer')
+                ->whereNull('user_id')
+                ->skip($i - 1)
+                ->first();
+
+            if ($washer) {
+                $washer->update(['user_id' => $staffUser->id]);
+            }
         }
 
         $paymentMethods = [PaymentMethod::Cash, PaymentMethod::Cash, PaymentMethod::Cash, PaymentMethod::Upi, PaymentMethod::Card];
