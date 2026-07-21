@@ -92,10 +92,38 @@ log "dir=$APP_DIR branch=$DEPLOY_BRANCH php=$DEPLOY_PHP"
 command -v "$DEPLOY_PHP" >/dev/null 2>&1 || fail "PHP not found: $DEPLOY_PHP"
 [ ${#COMPOSER_CMD[@]} -gt 0 ] || fail "composer not found — place composer.phar in project root or set DEPLOY_COMPOSER"
 
-# Dirty tree blocks auto-deploy (unless DEPLOY_FORCE=1 with clean intent — still refuse dirty)
+# Ignore permission-only diffs (chmod on shared hosting dirties tracked .gitignore files)
+git config core.fileMode false >/dev/null 2>&1 || true
+
+# Soft-clean noise that shared hosting / prior deploys leave behind
+reset_deploy_noise() {
+  rm -f "$APP_DIR/public/error_log" "$APP_DIR/composer-setup.php" 2>/dev/null || true
+  # Filament assets are committed in git — discard accidental republish diffs
+  git checkout -- \
+    public/js/filament \
+    public/css/filament \
+    bootstrap/cache/.gitignore \
+    storage/app/.gitignore \
+    storage/app/private/.gitignore \
+    storage/app/public/.gitignore \
+    storage/framework/.gitignore \
+    storage/framework/cache/.gitignore \
+    storage/framework/cache/data/.gitignore \
+    storage/framework/sessions/.gitignore \
+    storage/framework/testing/.gitignore \
+    storage/framework/views/.gitignore \
+    storage/logs/.gitignore \
+    2>/dev/null || true
+}
+
+reset_deploy_noise
+
+# Dirty tree blocks auto-deploy (real local edits only)
 if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
   log "Working tree is dirty. Auto-deploy refused."
-  log "Fix with: git status && git checkout -- .   OR   git stash"
+  log "Dirty paths:"
+  git status --porcelain 2>/dev/null | while IFS= read -r line; do log "  $line"; done
+  log "Fix with: git status && git checkout -- . && git clean -fd -e vendor -e .env -e .env.deploy -e composer.phar -e storage"
   log "Then re-run: bash scripts/cpanel-deploy.sh"
   exit 0
 fi
@@ -157,13 +185,17 @@ log "optimize caches"
 "$DEPLOY_PHP" artisan config:cache >>"$LOG_FILE" 2>&1 || true
 "$DEPLOY_PHP" artisan route:cache >>"$LOG_FILE" 2>&1 || true
 "$DEPLOY_PHP" artisan view:cache >>"$LOG_FILE" 2>&1 || true
-"$DEPLOY_PHP" artisan filament:assets >>"$LOG_FILE" 2>&1 || true
+# filament assets are committed in the repo — do not republish (dirtifies working tree)
 
-log "permissions storage + bootstrap/cache"
-chmod -R ug+rwx storage bootstrap/cache 2>/dev/null || true
+log "permissions storage + bootstrap/cache (dirs/writable files only)"
+find storage bootstrap/cache -type d -exec chmod ug+rwx {} + 2>/dev/null || true
+find storage bootstrap/cache -type f ! -name '.gitignore' -exec chmod ug+rw {} + 2>/dev/null || true
 
 log "Maintenance mode OFF"
 "$DEPLOY_PHP" artisan up >>"$LOG_FILE" 2>&1 || true
+
+# Leave tree clean for the next cron tick
+reset_deploy_noise
 
 log "Deploy finished OK (was $LOCAL_SHA → now $(git rev-parse HEAD))"
 log "======== cpanel-deploy end ========"
