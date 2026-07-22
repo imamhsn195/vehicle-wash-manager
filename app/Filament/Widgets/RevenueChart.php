@@ -16,7 +16,7 @@ class RevenueChart extends ChartWidget
         'xl' => 2,
     ];
 
-    protected static ?string $maxHeight = '280px';
+    protected static ?string $maxHeight = '220px';
 
     public function getHeading(): string
     {
@@ -65,21 +65,32 @@ class RevenueChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
+            'maintainAspectRatio' => false,
             'plugins' => [
                 'legend' => [
                     'display' => true,
                     'position' => 'bottom',
+                    'labels' => [
+                        'boxWidth' => 12,
+                        'padding' => 12,
+                    ],
                 ],
             ],
             'scales' => [
                 'y' => [
                     'position' => 'left',
+                    'ticks' => [
+                        'maxTicks' => 4,
+                    ],
                     'grid' => [
                         'color' => 'rgba(148, 163, 184, 0.2)',
                     ],
                 ],
                 'y1' => [
                     'position' => 'right',
+                    'ticks' => [
+                        'maxTicks' => 4,
+                    ],
                     'grid' => [
                         'drawOnChartArea' => false,
                     ],
